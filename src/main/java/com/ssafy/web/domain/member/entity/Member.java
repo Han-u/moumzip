@@ -1,15 +1,31 @@
 package com.ssafy.web.domain.member.entity;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
-	private int id;
-	private String pw, login_id, name, email;
+	private Long id;
+	private String password;
+	private String salt;
+	private String loginId;
+	private String name;
+	private String email;
+	private String nickname;
+	private String phone;
+	private String profileImg;
+	private String role;
+	private boolean isDeleted;
+	private int loginFailCnt;
+	private boolean isLocked;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+	private LocalDateTime lastLoginFailTime;
+
+
 }
