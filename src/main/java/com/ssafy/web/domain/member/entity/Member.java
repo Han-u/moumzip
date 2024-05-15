@@ -63,4 +63,9 @@ public class Member extends BaseTimeEntity {
 		this.isLocked = isLocked;
 		this.isDeleted = isDeleted;
 	}
+
+	public void updateMember(String password, String phone){
+		this.password = password;
+		this.phone = phone;
+	}
 }
