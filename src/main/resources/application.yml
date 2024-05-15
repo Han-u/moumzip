@@ -1,0 +1,24 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ssafyweb?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    username: ssafy
+    password: ssafy
+  jpa:
+    hibernate:
+      ddl-auto: update  # option type: create, create-drop, update, validate, none
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000
+
+mybatis:
+  type-aliases-package: com.ssafy.web.*.model
+  mapper-locations: classpath:mapper/**/*.xml
+
+logging:
+  level:
+    root: info
