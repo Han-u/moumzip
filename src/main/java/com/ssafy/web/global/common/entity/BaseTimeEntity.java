@@ -1,4 +1,4 @@
-package com.ssafy.web.global.common;
+package com.ssafy.web.global.common.entity;
 
 import java.time.LocalDateTime;
 

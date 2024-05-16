@@ -1,7 +1,7 @@
 package com.ssafy.web.domain.deposit.entity;
 
 import com.ssafy.web.domain.member.entity.Member;
-import com.ssafy.web.global.common.BaseTimeEntity;
+import com.ssafy.web.global.common.entity.BaseTimeEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

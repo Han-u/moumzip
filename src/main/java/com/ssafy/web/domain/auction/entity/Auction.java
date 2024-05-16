@@ -31,7 +31,8 @@ public class Auction {
 	private long lowestBid;
 	private long startingBid;
 	private long listingPrice;
-	private Use use;
+	@Enumerated(EnumType.STRING)
+	private Usage usage;
 	@Enumerated(EnumType.STRING)
 	private AuctionStatus status;
 	private LocalDateTime bidOpening;
@@ -44,7 +45,7 @@ public class Auction {
 
 	@Builder
 	public Auction(Long auctionId, String location, float supplyArea, float exclusivePrivateArea, long lowestBid,
-		long startingBid, long listingPrice, Use use, AuctionStatus status, LocalDateTime bidOpening,
+		long startingBid, long listingPrice, Usage usage, AuctionStatus status, LocalDateTime bidOpening,
 		LocalDateTime bidClosing, long winningBid, Member winningBidder) {
 		this.auctionId = auctionId;
 		this.location = location;
@@ -53,7 +54,7 @@ public class Auction {
 		this.lowestBid = lowestBid;
 		this.startingBid = startingBid;
 		this.listingPrice = listingPrice;
-		this.use = use;
+		this.usage = usage;
 		this.status = status;
 		this.bidOpening = bidOpening;
 		this.bidClosing = bidClosing;

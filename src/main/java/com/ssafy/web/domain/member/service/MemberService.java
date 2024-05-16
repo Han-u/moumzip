@@ -9,5 +9,5 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-	private final MemberMapper mapper;
+	// private final MemberMapper mapper;
 }
