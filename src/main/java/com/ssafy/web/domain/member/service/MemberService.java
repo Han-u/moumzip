@@ -33,16 +33,12 @@ public class MemberService {
 	}
 
 	@Transactional
-	public void updateMember(UpdateMemberRequest updateMemberRequest) {
-		String email = "";
-		Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+	public void updateMember(Member member, UpdateMemberRequest updateMemberRequest) {
 		member.updateMember(updateMemberRequest.getPassword(), updateMemberRequest.getPhone());
 	}
 
 	@Transactional
-	public void deleteMember() {
-		String email = "";
-		Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+	public void deleteMember(Member member) {
 		memberRepository.delete(member);
 	}
 }
