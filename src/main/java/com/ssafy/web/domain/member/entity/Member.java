@@ -1,5 +1,6 @@
 package com.ssafy.web.domain.member.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
@@ -15,6 +16,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,17 +31,23 @@ public class Member extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberId;
-	@Column(nullable = false)
+
+	@NotNull
 	private String email;
 	@JsonIgnore
 	private String password;
 	private String salt;
 	@Enumerated(EnumType.STRING)
 	private Provider provider;
-	@Column(nullable = false)
+	@NotNull
 	private String name;
-	@Column(nullable = false)
+	@NotNull
 	private String phone;
+
+	private LocalDate dob;
+
+	private String accountNumber;
+	private String bank;
 	private int loginFailCnt;
 	private LocalDateTime lastLoginFailTime;
 	private boolean isAdmin;
@@ -49,7 +57,8 @@ public class Member extends BaseTimeEntity {
 	@Builder
 	public Member(Long memberId, String email, String password, String salt, Provider provider, String name,
 		String phone,
-		int loginFailCnt, LocalDateTime lastLoginFailTime, boolean isAdmin, boolean isLocked, boolean isDeleted) {
+		LocalDate dob, String accountNumber, String bank, int loginFailCnt, LocalDateTime lastLoginFailTime,
+		boolean isAdmin, boolean isLocked, boolean isDeleted) {
 		this.memberId = memberId;
 		this.email = email;
 		this.password = password;
@@ -57,6 +66,9 @@ public class Member extends BaseTimeEntity {
 		this.provider = provider;
 		this.name = name;
 		this.phone = phone;
+		this.dob = dob;
+		this.accountNumber = accountNumber;
+		this.bank = bank;
 		this.loginFailCnt = loginFailCnt;
 		this.lastLoginFailTime = lastLoginFailTime;
 		this.isAdmin = isAdmin;

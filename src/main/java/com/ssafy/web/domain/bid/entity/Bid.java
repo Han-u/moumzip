@@ -2,6 +2,7 @@ package com.ssafy.web.domain.bid.entity;
 
 
 import com.ssafy.web.domain.auction.entity.Auction;
+import com.ssafy.web.domain.deposit.entity.Deposit;
 import com.ssafy.web.domain.member.entity.Member;
 
 import jakarta.persistence.Entity;
@@ -27,27 +28,17 @@ public class Bid {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bidId;
 
-	private long bidPrice;
-
-	@Enumerated(EnumType.STRING)
-	private BidStatus status;
+	private Long bidPrice;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "auction_id")
+	@JoinColumn(name = "deposit_id")
 	@NotNull
-	private Auction auction;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id")
-	@NotNull
-	private Member member;
+	private Deposit deposit;
 
 	@Builder
-	public Bid(Long bidId, long bidPrice, BidStatus status, Auction auction, Member member) {
+	public Bid(Long bidId, Long bidPrice, Deposit deposit) {
 		this.bidId = bidId;
 		this.bidPrice = bidPrice;
-		this.status = status;
-		this.auction = auction;
-		this.member = member;
+		this.deposit = deposit;
 	}
 }

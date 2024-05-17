@@ -13,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,39 +28,44 @@ public class Auction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long auctionId;
 	private String location;
-	private float supplyArea;
-	private float exclusivePrivateArea;
-	private long lowestBid;
-	private long startingBid;
-	private long listingPrice;
+	private Float supplyArea;
+	private Float exclusivePrivateArea;
+	@NotNull
+	private Long startingBidPrice;
+	private Long listingPrice;
+	private Long officialLandPrice;
 	@Enumerated(EnumType.STRING)
-	private Usage usage;
+	private Purpose purpose;
 	@Enumerated(EnumType.STRING)
-	private AuctionStatus status;
+	private AuctionStatus auctionStatus;
+	@NotNull
 	private LocalDateTime bidOpening;
+	@NotNull
 	private LocalDateTime bidClosing;
-	private long winningBid;
+	private LocalDateTime bidClosingExtended;
+	private Long winningBidPrice;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id")
+	@JoinColumn(name = "winning_member_id")
 	private Member winningBidder;
 
 	@Builder
-	public Auction(Long auctionId, String location, float supplyArea, float exclusivePrivateArea, long lowestBid,
-		long startingBid, long listingPrice, Usage usage, AuctionStatus status, LocalDateTime bidOpening,
-		LocalDateTime bidClosing, long winningBid, Member winningBidder) {
+	public Auction(Long auctionId, String location, Float supplyArea, Float exclusivePrivateArea,
+		Long startingBidPrice, Long listingPrice, Long officialLandPrice, Purpose purpose, AuctionStatus auctionStatus, LocalDateTime bidOpening,
+		LocalDateTime bidClosing, LocalDateTime bidClosingExtended, Long winningBidPrice, Member winningBidder) {
 		this.auctionId = auctionId;
 		this.location = location;
 		this.supplyArea = supplyArea;
 		this.exclusivePrivateArea = exclusivePrivateArea;
-		this.lowestBid = lowestBid;
-		this.startingBid = startingBid;
+		this.startingBidPrice = startingBidPrice;
+		this.officialLandPrice = officialLandPrice;
 		this.listingPrice = listingPrice;
-		this.usage = usage;
-		this.status = status;
+		this.purpose = purpose;
+		this.auctionStatus = auctionStatus;
 		this.bidOpening = bidOpening;
 		this.bidClosing = bidClosing;
-		this.winningBid = winningBid;
+		this.bidClosingExtended = bidClosingExtended;
+		this.winningBidPrice = winningBidPrice;
 		this.winningBidder = winningBidder;
 	}
 }
