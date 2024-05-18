@@ -1,14 +1,16 @@
-package com.ssafy.web.global.config;
+package com.ssafy.web.global.config.web;
 
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.ssafy.web.domain.member.entity.Provider;
 import com.ssafy.web.global.common.auth.AdminAuthorizationInterceptor;
 import com.ssafy.web.global.common.auth.MemberArgumentResolver;
 import com.ssafy.web.global.common.auth.jwt.JwtTokenProvider;
@@ -27,6 +29,11 @@ public class WebConfig implements WebMvcConfigurer {
 			.allowedOriginPatterns("http://localhost:5173")
 			// GET, POST, PATCH, DELETE 메서드를 허용한다.
 			.allowedMethods("GET", "POST", "PATCH", "DELETE");
+	}
+
+	@Override
+	public void addFormatters(FormatterRegistry registry){
+		registry.addConverter(String.class, Provider.class, source -> Provider.valueOf(source.toUpperCase()));
 	}
 
 	@Override
