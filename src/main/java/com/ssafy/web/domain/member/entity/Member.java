@@ -42,6 +42,9 @@ public class Member extends BaseTimeEntity {
 	private String phone;
 	private int loginFailCnt;
 	private LocalDateTime lastLoginFailTime;
+	private LocalDateTime dateOfBirth;
+	private String bank;
+	private String accountNumber;
 	private boolean isAdmin;
 	private boolean isLocked;
 	private boolean isDeleted;
@@ -49,7 +52,7 @@ public class Member extends BaseTimeEntity {
 	@Builder
 	public Member(Long memberId, String email, String password, String salt, Provider provider, String name,
 		String phone,
-		int loginFailCnt, LocalDateTime lastLoginFailTime, boolean isAdmin, boolean isLocked, boolean isDeleted) {
+		int loginFailCnt, LocalDateTime lastLoginFailTime,LocalDateTime dateOfBirth,String bank, String accountNumber,boolean isAdmin, boolean isLocked, boolean isDeleted) {
 		this.memberId = memberId;
 		this.email = email;
 		this.password = password;
@@ -59,6 +62,9 @@ public class Member extends BaseTimeEntity {
 		this.phone = phone;
 		this.loginFailCnt = loginFailCnt;
 		this.lastLoginFailTime = lastLoginFailTime;
+		this.dateOfBirth = dateOfBirth;
+		this.bank = bank;
+		this.accountNumber = accountNumber;
 		this.isAdmin = isAdmin;
 		this.isLocked = isLocked;
 		this.isDeleted = isDeleted;

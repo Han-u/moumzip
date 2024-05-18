@@ -1,5 +1,6 @@
 package com.ssafy.web.domain.member.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberService memberService;
 
-	@GetMapping("/me")
+    @GetMapping("/me")
 	public ResponseEntity<?> getMember(@CurrentUser Member member){
 		MemberDto memberDto = MemberDto.of(member);
 		return ResponseEntity.status(HttpStatus.OK).body(memberDto);
@@ -36,6 +37,7 @@ public class MemberController {
 	@PostMapping
 	public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequest signUpRequest){
 		memberService.signup(signUpRequest);
+
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
