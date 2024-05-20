@@ -1,6 +1,5 @@
 package com.ssafy.web.domain.member.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
@@ -9,7 +8,6 @@ import org.hibernate.annotations.SQLRestriction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.web.global.common.entity.BaseTimeEntity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLRestriction("deleted_at is NULL")
+@SQLRestriction("is_deleted = false")
 @SQLDelete(sql = "UPDATE member SET is_deleted = true where member_id = ?")
 public class Member extends BaseTimeEntity {
 	@Id
@@ -41,7 +39,6 @@ public class Member extends BaseTimeEntity {
 	private Provider provider;
 	@NotNull
 	private String name;
-	@NotNull
 	private String phone;
 	private int loginFailCnt;
 	private LocalDateTime lastLoginFailTime;

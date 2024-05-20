@@ -61,7 +61,7 @@ public class OAuth2Service {
 		String accessToken = jwtTokenProvider.createAccessToken(member);
 		String refreshToken = jwtTokenProvider.createRefreshToken(member);
 
-		Token token = tokenRepository.findById(2L).orElseGet(() -> Token.builder()
+		Token token = tokenRepository.findByMember(member).orElseGet(() -> Token.builder()
 			.member(member)
 			.build());
 
