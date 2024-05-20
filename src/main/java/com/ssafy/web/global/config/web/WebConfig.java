@@ -2,7 +2,6 @@ package com.ssafy.web.global.config.web;
 
 import java.util.List;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.ssafy.web.domain.member.entity.Provider;
 import com.ssafy.web.global.common.auth.AdminAuthorizationInterceptor;
 import com.ssafy.web.global.common.auth.MemberArgumentResolver;
-import com.ssafy.web.global.common.auth.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,11 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 	private final AdminAuthorizationInterceptor adminAuthorizationInterceptor;
-
-	@Bean
-	public JwtTokenProvider jwtTokenProvider(){
-		return new JwtTokenProvider();
-	}
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		// 모든 경로에 대해
