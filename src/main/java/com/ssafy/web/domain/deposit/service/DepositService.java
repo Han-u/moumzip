@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.web.domain.auction.entity.Auction;
+import com.ssafy.web.domain.auction.entity.AuctionStatus;
 import com.ssafy.web.domain.auction.repository.AuctionRepository;
 import com.ssafy.web.domain.deposit.dto.DepositDto;
 import com.ssafy.web.domain.deposit.dto.OtpRequest;
@@ -29,15 +30,22 @@ public class DepositService {
 
 	@Transactional
 	public void createDeposit(Member member, Long auctionId) {
-		Optional<Deposit> deposit = depositRepository.findByMember_MemberIdAndAuction_AuctionId(member.getMemberId(), auctionId);
-		if(deposit.isPresent()){
+		if (member.isAdmin() || member.getAccountNumber() == null || member.getAccountNumber().isBlank()) {
 			throw new BusinessException(ErrorCode.BAD_REQUEST);
 		}
 
-		Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST));
-		if(!auction.isWithinParticipationPeriod()){
+		Optional<Deposit> deposit = depositRepository.findByMember_MemberIdAndAuction_AuctionId(member.getMemberId(), auctionId);
+		if (deposit.isPresent()) {
 			throw new BusinessException(ErrorCode.BAD_REQUEST);
 		}
+
+		Auction auction = auctionRepository.findById(auctionId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST));
+		if (!auction.isWithinParticipationPeriod()) {
+			throw new BusinessException(ErrorCode.BAD_REQUEST);
+		}
+
+		// 가상 계좌 발급
 
 		Deposit participation = Deposit.builder()
 			.amount(auction.getDepositPrice())
@@ -51,7 +59,13 @@ public class DepositService {
 
 	@Transactional
 	public void setOtp(Member member, Long auctionId, OtpRequest otpRequest) {
-		Deposit deposit = depositRepository.findByMember_MemberIdAndAuction_AuctionId(member.getMemberId(), auctionId).orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST));
+		Deposit deposit = depositRepository.findByMember_MemberIdAndAuction_AuctionStatusAndDepositStatus(
+			member.getMemberId(),
+			auctionId,
+			AuctionStatus.PROGRESS,
+			DepositStatus.DEPOSITED
+		).orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST));
+
 		deposit.updateOtp(otpRequest.getOtp());
 		depositRepository.save(deposit);
 	}
