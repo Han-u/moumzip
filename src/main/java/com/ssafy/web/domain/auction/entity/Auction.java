@@ -4,7 +4,17 @@ import java.time.LocalDateTime;
 
 import com.ssafy.web.domain.member.entity.Member;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,63 +28,60 @@ public class Auction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long auctionId;
 	private String location;
-	private float supplyArea;
-	private float exclusivePrivateArea;
-	private long lowestBid;
-	private long startingBidPrice;
-	private long listingPrice;
-	private long officialLandPrice;
+	private Float supplyArea;
+	private Float exclusivePrivateArea;
+	@NotNull
+	private Long startingBidPrice;
+	private Long listingPrice;
+	private Long officialLandPrice;
 	@Enumerated(EnumType.STRING)
 	private Purpose purpose;
 	@Enumerated(EnumType.STRING)
-	private AuctionStatus status;
+	private AuctionStatus auctionStatus;
+	@NotNull
 	private LocalDateTime bidOpening;
+	@NotNull
 	private LocalDateTime bidClosing;
 	private LocalDateTime bidClosingExtended;
-	private long winningBidPrice;
-	private String winningMemberId;
+	private Long winningBidPrice;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id")
+	@JoinColumn(name = "winning_member_id")
 	private Member winningBidder;
 
 	@Builder
-	public Auction(Long auctionId, String location, float supplyArea, float exclusivePrivateArea, long lowestBid,
-                   long startingBidPrice, long listingPrice, long officialLandPrice, Purpose purpose, AuctionStatus status, LocalDateTime bidOpening,
-                   LocalDateTime bidClosing, LocalDateTime bidClosingExtended, long winningBidPrice, String winningMemberId, Member winningBidder) {
+	public Auction(Long auctionId, String location, Float supplyArea, Float exclusivePrivateArea,
+		Long startingBidPrice, Long listingPrice, Long officialLandPrice, Purpose purpose, AuctionStatus auctionStatus, LocalDateTime bidOpening,
+		LocalDateTime bidClosing, LocalDateTime bidClosingExtended, Long winningBidPrice, Member winningBidder) {
 		this.auctionId = auctionId;
 		this.location = location;
 		this.supplyArea = supplyArea;
 		this.exclusivePrivateArea = exclusivePrivateArea;
-		this.lowestBid = lowestBid;
 		this.startingBidPrice = startingBidPrice;
+		this.officialLandPrice = officialLandPrice;
 		this.listingPrice = listingPrice;
-        this.officialLandPrice = officialLandPrice;
-        this.purpose = purpose;
-		this.status = status;
+		this.purpose = purpose;
+		this.auctionStatus = auctionStatus;
 		this.bidOpening = bidOpening;
 		this.bidClosing = bidClosing;
-        this.bidClosingExtended = bidClosingExtended;
-        this.winningBidPrice = winningBidPrice;
-        this.winningMemberId = winningMemberId;
-        this.winningBidder = winningBidder;
+		this.bidClosingExtended = bidClosingExtended;
+		this.winningBidPrice = winningBidPrice;
+		this.winningBidder = winningBidder;
 	}
 
 	public void update(Auction auction) {
 		this.location = auction.location;
 		this.supplyArea = auction.supplyArea;
 		this.exclusivePrivateArea = auction.exclusivePrivateArea;
-		this.lowestBid = auction.lowestBid;
 		this.startingBidPrice = auction.startingBidPrice;
 		this.listingPrice = auction.listingPrice;
 		this.officialLandPrice = auction.officialLandPrice;
 		this.purpose = auction.purpose;
-		this.status = auction.status;
+		this.auctionStatus = auction.auctionStatus;
 		this.bidOpening = auction.bidOpening;
 		this.bidClosing = auction.bidClosing;
 		this.bidClosingExtended = auction.bidClosingExtended;
 		this.winningBidPrice = auction.winningBidPrice;
-		this.winningMemberId = auction.winningMemberId;
 		this.winningBidder = auction.winningBidder;
 	}
 }

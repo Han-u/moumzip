@@ -1,5 +1,6 @@
 package com.ssafy.web.domain.member.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
@@ -15,6 +16,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,16 +31,17 @@ public class Member extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberId;
-	@Column(nullable = false)
+
+	@NotNull
 	private String email;
 	@JsonIgnore
 	private String password;
 	private String salt;
 	@Enumerated(EnumType.STRING)
 	private Provider provider;
-	@Column(nullable = false)
+	@NotNull
 	private String name;
-	@Column(nullable = false)
+	@NotNull
 	private String phone;
 	private int loginFailCnt;
 	private LocalDateTime lastLoginFailTime;
