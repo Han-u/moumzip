@@ -15,8 +15,13 @@ import com.ssafy.web.global.common.auth.AdminAuthorizationInterceptor;
 import com.ssafy.web.global.common.auth.MemberArgumentResolver;
 import com.ssafy.web.global.common.auth.jwt.JwtTokenProvider;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
+	private final AdminAuthorizationInterceptor adminAuthorizationInterceptor;
+
 	@Bean
 	public JwtTokenProvider jwtTokenProvider(){
 		return new JwtTokenProvider();
@@ -43,7 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new AdminAuthorizationInterceptor(jwtTokenProvider())) // jwt 검증하는 인터셉터를
+		registry.addInterceptor(adminAuthorizationInterceptor) // jwt 검증하는 인터셉터를
 			.addPathPatterns("/api/**"); // 해당 url에 적용
 	}
 
