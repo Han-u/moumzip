@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.web.domain.auction.entity.Auction;
 import com.ssafy.web.domain.deposit.dto.DepositDto;
 import com.ssafy.web.domain.deposit.dto.OtpRequest;
-import com.ssafy.web.domain.deposit.entity.Deposit;
 import com.ssafy.web.domain.deposit.service.DepositService;
 import com.ssafy.web.domain.member.entity.Member;
 import com.ssafy.web.global.common.auth.CurrentUser;
