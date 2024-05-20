@@ -1,8 +1,10 @@
 package com.ssafy.web.domain.auction.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.ssafy.web.domain.member.entity.Member;
+import com.ssafy.web.global.common.entity.BaseTimeEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,7 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Auction {
+public class Auction extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long auctionId;
@@ -38,6 +39,8 @@ public class Auction {
 	private Purpose purpose;
 	@Enumerated(EnumType.STRING)
 	private AuctionStatus auctionStatus;
+	@Enumerated(EnumType.STRING)
+	private AuctionType auctionType;
 	@NotNull
 	private LocalDateTime bidOpening;
 	@NotNull
@@ -50,18 +53,21 @@ public class Auction {
 	private Member winningBidder;
 
 	@Builder
-	public Auction(Long auctionId, String location, Float supplyArea, Float exclusivePrivateArea,
-		Long startingBidPrice, Long listingPrice, Long officialLandPrice, Purpose purpose, AuctionStatus auctionStatus, LocalDateTime bidOpening,
-		LocalDateTime bidClosing, LocalDateTime bidClosingExtended, Long winningBidPrice, Member winningBidder) {
+	public Auction(Long auctionId, String location, Float supplyArea, Float exclusivePrivateArea, Long startingBidPrice,
+		Long listingPrice, Long officialLandPrice, Purpose purpose, AuctionStatus auctionStatus,
+		AuctionType auctionType,
+		LocalDateTime bidOpening, LocalDateTime bidClosing, LocalDateTime bidClosingExtended, Long winningBidPrice,
+		Member winningBidder) {
 		this.auctionId = auctionId;
 		this.location = location;
 		this.supplyArea = supplyArea;
 		this.exclusivePrivateArea = exclusivePrivateArea;
 		this.startingBidPrice = startingBidPrice;
-		this.officialLandPrice = officialLandPrice;
 		this.listingPrice = listingPrice;
+		this.officialLandPrice = officialLandPrice;
 		this.purpose = purpose;
 		this.auctionStatus = auctionStatus;
+		this.auctionType = auctionType;
 		this.bidOpening = bidOpening;
 		this.bidClosing = bidClosing;
 		this.bidClosingExtended = bidClosingExtended;
@@ -83,5 +89,28 @@ public class Auction {
 		this.bidClosingExtended = auction.bidClosingExtended;
 		this.winningBidPrice = auction.winningBidPrice;
 		this.winningBidder = auction.winningBidder;
+	}
+
+	public void updateWinner(Long winningBidPrice, Member member){
+		if(winningBidPrice <= this.winningBidPrice){
+			throw new IllegalArgumentException("입력값이 최고가보다 낮습니다.");
+		}
+		this.winningBidPrice = winningBidPrice;
+		this.winningBidder = member;
+	}
+
+	public boolean isInProgress(){
+		if(this.getAuctionStatus() != AuctionStatus.PROGRESS){
+			return false;
+		}
+		return this.bidOpening.isAfter(LocalDateTime.now()) && this.bidClosingExtended.isBefore(LocalDateTime.now());
+	}
+
+	public boolean isWithinParticipationPeriod(){
+		return this.getCreatedAt().toLocalDate().plusDays(5).isAfter(LocalDate.now()) && this.getBidOpening().minusDays(1).isBefore(LocalDateTime.now());
+	}
+
+	public long getDepositPrice(){
+		return (long)(this.startingBidPrice * 0.1);
 	}
 }
