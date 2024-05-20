@@ -21,15 +21,18 @@ public class Auction {
 	private float supplyArea;
 	private float exclusivePrivateArea;
 	private long lowestBid;
-	private long startingBid;
+	private long startingBidPrice;
 	private long listingPrice;
+	private long officialLandPrice;
 	@Enumerated(EnumType.STRING)
-	private Usage usage;
+	private Purpose purpose;
 	@Enumerated(EnumType.STRING)
 	private AuctionStatus status;
 	private LocalDateTime bidOpening;
 	private LocalDateTime bidClosing;
-	private long winningBid;
+	private LocalDateTime bidClosingExtended;
+	private long winningBidPrice;
+	private String winningMemberId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -37,20 +40,41 @@ public class Auction {
 
 	@Builder
 	public Auction(Long auctionId, String location, float supplyArea, float exclusivePrivateArea, long lowestBid,
-		long startingBid, long listingPrice, Usage usage, AuctionStatus status, LocalDateTime bidOpening,
-		LocalDateTime bidClosing, long winningBid, Member winningBidder) {
+                   long startingBidPrice, long listingPrice, long officialLandPrice, Purpose purpose, AuctionStatus status, LocalDateTime bidOpening,
+                   LocalDateTime bidClosing, LocalDateTime bidClosingExtended, long winningBidPrice, String winningMemberId, Member winningBidder) {
 		this.auctionId = auctionId;
 		this.location = location;
 		this.supplyArea = supplyArea;
 		this.exclusivePrivateArea = exclusivePrivateArea;
 		this.lowestBid = lowestBid;
-		this.startingBid = startingBid;
+		this.startingBidPrice = startingBidPrice;
 		this.listingPrice = listingPrice;
-		this.usage = usage;
+        this.officialLandPrice = officialLandPrice;
+        this.purpose = purpose;
 		this.status = status;
 		this.bidOpening = bidOpening;
 		this.bidClosing = bidClosing;
-		this.winningBid = winningBid;
-		this.winningBidder = winningBidder;
+        this.bidClosingExtended = bidClosingExtended;
+        this.winningBidPrice = winningBidPrice;
+        this.winningMemberId = winningMemberId;
+        this.winningBidder = winningBidder;
+	}
+
+	public void update(Auction auction) {
+		this.location = auction.location;
+		this.supplyArea = auction.supplyArea;
+		this.exclusivePrivateArea = auction.exclusivePrivateArea;
+		this.lowestBid = auction.lowestBid;
+		this.startingBidPrice = auction.startingBidPrice;
+		this.listingPrice = auction.listingPrice;
+		this.officialLandPrice = auction.officialLandPrice;
+		this.purpose = auction.purpose;
+		this.status = auction.status;
+		this.bidOpening = auction.bidOpening;
+		this.bidClosing = auction.bidClosing;
+		this.bidClosingExtended = auction.bidClosingExtended;
+		this.winningBidPrice = auction.winningBidPrice;
+		this.winningMemberId = auction.winningMemberId;
+		this.winningBidder = auction.winningBidder;
 	}
 }

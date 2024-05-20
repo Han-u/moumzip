@@ -1,5 +1,5 @@
 package com.ssafy.web.domain.auction.entity;
 
-public enum Usage {
+public enum Purpose {
 	LAND
 }
