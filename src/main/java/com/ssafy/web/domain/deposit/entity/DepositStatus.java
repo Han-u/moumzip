@@ -1,6 +1,7 @@
 package com.ssafy.web.domain.deposit.entity;
 
 public enum DepositStatus {
+	PENDING_DEPOSIT("입금 대기"),
 	DEPOSITED("입금"),
 	CANCELLED("취소"),
 	REFUNDED_CANCEL("취소 환불"),
