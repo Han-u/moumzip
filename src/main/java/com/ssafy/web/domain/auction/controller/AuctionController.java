@@ -2,13 +2,8 @@ package com.ssafy.web.domain.auction.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ssafy.web.global.common.auth.RequiresAdmin;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.web.domain.auction.entity.Auction;
 import com.ssafy.web.domain.auction.service.AuctionService;
@@ -19,30 +14,33 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auctions")
 @RequiredArgsConstructor
 public class AuctionController {
-	private final AuctionService auctionService;
+    private final AuctionService auctionService;
 
-	@GetMapping
-	public List<Auction> getAuctionList(){
-		return null;
-	}
+    @GetMapping
+    public List<Auction> getAuctionList() {
+        return auctionService.findAllAuctions();
+    }
 
-	@GetMapping("/{auctionId}")
-	public Auction getAuction(@PathVariable String auctionId){
-		return null;
-	}
+    @GetMapping("/{auctionId}")
+    public Auction getAuction(@PathVariable Long auctionId) {
+        return auctionService.findAuctionById(auctionId);
+    }
 
-	@PostMapping
-	public void createAuction(){
+    @RequiresAdmin
+    @PostMapping
+    public void createAuction(@RequestBody Auction auction) {
+		auctionService.createAuction(auction);
+    }
 
-	}
+    @RequiresAdmin
+    @PatchMapping("/{auctionId}")
+    public void updateAuction(@PathVariable Long auctionId, @RequestBody Auction auction) {
+        auctionService.updateAuction(auctionId, auction);
+    }
 
-	@PatchMapping("/{auctionId}")
-	public void updateAuction(@PathVariable String auctionId){
-
-	}
-
-	@DeleteMapping("/{auctionId}")
-	public void deleteAuction(@PathVariable String auctionId){
-
-	}
+    @RequiresAdmin
+    @DeleteMapping("/{auctionId}")
+    public void deleteAuction(@PathVariable Long auctionId) {
+        auctionService.deleteAuction(auctionId);
+    }
 }

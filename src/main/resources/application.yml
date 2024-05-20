@@ -16,16 +16,12 @@ spring:
         default_batch_fetch_size: 1000
   jwt:
     token:
-      secret-key: afsfasf
+      secret-key: ${SPRING_JWT_SECRET_KEY:}
     access:
         expiration: 1000
     refresh:
-        expiration: 1000
+        expiration: 10000
 
 mybatis:
   type-aliases-package: com.ssafy.web.*.model
   mapper-locations: classpath:mapper/**/*.xml
-
-logging:
-  level:
-    root: debug

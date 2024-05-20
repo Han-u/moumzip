@@ -68,4 +68,20 @@ public class Auction {
 		this.winningBidPrice = winningBidPrice;
 		this.winningBidder = winningBidder;
 	}
+
+	public void update(Auction auction) {
+		this.location = auction.location;
+		this.supplyArea = auction.supplyArea;
+		this.exclusivePrivateArea = auction.exclusivePrivateArea;
+		this.startingBidPrice = auction.startingBidPrice;
+		this.listingPrice = auction.listingPrice;
+		this.officialLandPrice = auction.officialLandPrice;
+		this.purpose = auction.purpose;
+		this.auctionStatus = auction.auctionStatus;
+		this.bidOpening = auction.bidOpening;
+		this.bidClosing = auction.bidClosing;
+		this.bidClosingExtended = auction.bidClosingExtended;
+		this.winningBidPrice = auction.winningBidPrice;
+		this.winningBidder = auction.winningBidder;
+	}
 }

@@ -1,5 +1,6 @@
 package com.ssafy.web.domain.member.service;
 
+import com.ssafy.web.global.util.MakeSalt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,15 +20,14 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 	private final MemberRepository memberRepository;
 
-	public MemberDto getMember() {
-		String email = "";
-		Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+	public MemberDto getMember(String memberEmail) {
+		Member member = memberRepository.findByEmail(memberEmail).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 		return MemberDto.of(member);
 	}
 
 	@Transactional
 	public void signup(SignUpRequest signUpRequest) {
-		String salt = "";
+		String salt = MakeSalt.generateSalt();
 		Member member = signUpRequest.toEntity(salt);
 		memberRepository.save(member);
 	}
@@ -35,6 +35,7 @@ public class MemberService {
 	@Transactional
 	public void updateMember(Member member, UpdateMemberRequest updateMemberRequest) {
 		member.updateMember(updateMemberRequest.getPassword(), updateMemberRequest.getPhone());
+
 	}
 
 	@Transactional
