@@ -23,7 +23,12 @@ public enum ErrorCode {
 	// user
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "유저를 찾을 수 없습니다."),
 	USER_EMAIL_DUPLICATE(HttpStatus.CONFLICT, "U002", "사용중인 이메일 입니다."),
-	USER_NICKNAME_DUPLICATE(HttpStatus.CONFLICT, "U003", "사용중인 닉네임 입니다.");
+	USER_NICKNAME_DUPLICATE(HttpStatus.CONFLICT, "U003", "사용중인 닉네임 입니다."),
+
+	// auction
+	AUCTION_NOT_IN_PROGRESS(HttpStatus.BAD_REQUEST, "AC001", "진행중인 경매가 아닙니다."),
+	AUCTION_NOT_QUALIFIED(HttpStatus.BAD_REQUEST, "AC002", "참여 자격이 없습니다."),
+	AUCTION_ALREADY_PARTICIPATED(HttpStatus.BAD_REQUEST, "AC003", "이미 참여한 경매입니다"),;
 
 
 	private final HttpStatus status;
