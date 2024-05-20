@@ -1,5 +1,8 @@
 package com.ssafy.web.domain.member.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.ssafy.web.global.util.MakeSalt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,11 +38,15 @@ public class MemberService {
 	@Transactional
 	public void updateMember(Member member, UpdateMemberRequest updateMemberRequest) {
 		member.updateMember(updateMemberRequest.getPassword(), updateMemberRequest.getPhone());
-
 	}
 
 	@Transactional
 	public void deleteMember(Member member) {
 		memberRepository.delete(member);
+	}
+
+	public List<MemberDto> getAllMembers() {
+		List<Member> members = memberRepository.findAll();
+		return members.stream().map(MemberDto::of).collect(Collectors.toList());
 	}
 }

@@ -1,12 +1,12 @@
 package com.ssafy.web.domain.member.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +18,7 @@ import com.ssafy.web.domain.member.dto.UpdateMemberRequest;
 import com.ssafy.web.domain.member.entity.Member;
 import com.ssafy.web.domain.member.service.MemberService;
 import com.ssafy.web.global.common.auth.CurrentUser;
+import com.ssafy.web.global.common.auth.RequiresAdmin;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,6 @@ public class MemberController {
 	@PostMapping
 	public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequest signUpRequest){
 		memberService.signup(signUpRequest);
-
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
@@ -53,4 +53,10 @@ public class MemberController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	@GetMapping
+	@RequiresAdmin
+	public ResponseEntity<?> getAllMembers(){
+		List<MemberDto> members = memberService.getAllMembers();
+		return ResponseEntity.status(HttpStatus.OK).body(members);
+	}
 }
