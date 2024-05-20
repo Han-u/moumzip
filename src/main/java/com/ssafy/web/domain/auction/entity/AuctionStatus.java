@@ -5,7 +5,7 @@ public enum AuctionStatus {
 	SCHEDULED("예약"),
 	CANCELED("취소"),
 	ENDED("종료"),
-	PROCESS("진행중");
+	PROGRESS("진행중");
 
 	private final String desc;
 

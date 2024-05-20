@@ -1,13 +1,10 @@
 package com.ssafy.web.domain.bid.entity;
 
 
-import com.ssafy.web.domain.auction.entity.Auction;
 import com.ssafy.web.domain.deposit.entity.Deposit;
-import com.ssafy.web.domain.member.entity.Member;
+import com.ssafy.web.global.common.entity.BaseTimeEntity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Bid {
+public class Bid extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bidId;
