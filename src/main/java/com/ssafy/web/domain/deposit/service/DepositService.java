@@ -59,7 +59,7 @@ public class DepositService {
 
 	@Transactional
 	public void setOtp(Member member, Long auctionId, OtpRequest otpRequest) {
-		Deposit deposit = depositRepository.findByMember_MemberIdAndAuction_AuctionStatusAndDepositStatus(
+		Deposit deposit = depositRepository.findByMember_MemberIdAndAuction_AuctionIdAndAuction_AuctionStatusAndDepositStatus(
 			member.getMemberId(),
 			auctionId,
 			AuctionStatus.PROGRESS,

@@ -11,7 +11,7 @@ import com.ssafy.web.domain.deposit.entity.DepositStatus;
 
 public interface DepositRepository extends JpaRepository<Deposit, Long> {
 	Optional<Deposit> findByMember_MemberIdAndAuction_AuctionId(Long memberId, Long auctionId);
-	Optional<Deposit> findByMember_MemberIdAndAuction_AuctionStatusAndDepositStatus(Long memberId, Long auctionId, AuctionStatus auctionStatus, DepositStatus depositStatus);
+	Optional<Deposit> findByMember_MemberIdAndAuction_AuctionIdAndAuction_AuctionStatusAndDepositStatus(Long memberId, Long auctionId, AuctionStatus auctionStatus, DepositStatus depositStatus);
 
 	List<Deposit> findByMember_MemberId(Long memberId);
 }
