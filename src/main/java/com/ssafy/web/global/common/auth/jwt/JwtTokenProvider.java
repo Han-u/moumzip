@@ -1,22 +1,28 @@
 package com.ssafy.web.global.common.auth.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import com.ssafy.web.domain.member.entity.Member;
-import jakarta.servlet.http.HttpServletRequest;
-
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.ssafy.web.domain.member.entity.Member;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+
 @Component
 public class JwtTokenProvider {
     @Value("${spring.jwt.token.secret-key}")
-    private String secretKey;
+    private String secretKeyString;
     @Value("${spring.jwt.access.expiration}")
     private long accessExpiration;
     @Value("${spring.jwt.refresh.expiration}")
@@ -24,6 +30,14 @@ public class JwtTokenProvider {
 
     private static final String BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
+
+    private SecretKey secretKey;
+
+    @PostConstruct
+    private void getSecretKeyBytes(){
+        byte[] decodedKey = Base64.getDecoder().decode(secretKeyString);
+        this.secretKey = new SecretKeySpec(decodedKey, SignatureAlgorithm.HS256.getJcaName());
+    }
 
     public String createAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
@@ -37,7 +51,7 @@ public class JwtTokenProvider {
                 .setSubject(member.getMemberId().toString())
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -53,7 +67,7 @@ public class JwtTokenProvider {
                 .setSubject(member.getMemberId().toString())
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -67,7 +81,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -75,7 +89,7 @@ public class JwtTokenProvider {
     }
 
     public Member extractMember(String token) {
-		Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
 		String memberEmail = (String)claims.get("memberEmail");
         Long memberId = Long.valueOf(claims.getSubject());
 
