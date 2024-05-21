@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLRestriction("deleted_at is NULL")
+@SQLRestriction("is_deleted = false")
 @SQLDelete(sql = "UPDATE member SET is_deleted = true where member_id = ?")
 public class Member extends BaseTimeEntity {
 	@Id
@@ -63,7 +63,7 @@ public class Member extends BaseTimeEntity {
 		this.provider = provider;
 		this.name = name;
 		this.phone = phone;
-		this.loginFailCnt = loginFailCnt;
+		this.loginFailCnt = 0;
 		this.lastLoginFailTime = lastLoginFailTime;
 		this.dateOfBirth = dateOfBirth;
 		this.bank = bank;
@@ -77,4 +77,5 @@ public class Member extends BaseTimeEntity {
 		this.password = password;
 		this.phone = phone;
 	}
+
 }

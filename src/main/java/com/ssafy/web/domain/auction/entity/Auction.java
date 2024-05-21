@@ -113,4 +113,7 @@ public class Auction extends BaseTimeEntity {
 	public long getDepositPrice(){
 		return (long)(this.startingBidPrice * 0.1);
 	}
+	public void delete() {
+		this.auctionStatus = AuctionStatus.CANCELED;
+	}
 }

@@ -25,4 +25,11 @@ public class MemberDto {
 			.phone(member.getPhone())
 			.build();
 	}
+	public static Member toEntity(MemberDto memberDto) {
+		return Member.builder()
+				.email(memberDto.getEmail())
+				.name(memberDto.getName())
+				.phone(memberDto.getPhone())
+				.build();
+	}
 }

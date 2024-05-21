@@ -27,36 +27,36 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
 public class MemberController {
-	private final MemberService memberService;
+    private final MemberService memberService;
 
     @GetMapping("/me")
-	public ResponseEntity<?> getMember(@CurrentUser Member member){
-		MemberDto memberDto = MemberDto.of(member);
-		return ResponseEntity.status(HttpStatus.OK).body(memberDto);
-	}
+    public ResponseEntity<?> getMember(@CurrentUser Member member) {
+        MemberDto memberDto = MemberDto.of(member);
+        return ResponseEntity.status(HttpStatus.OK).body(memberDto);
+    }
 
-	@PostMapping
-	public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequest signUpRequest){
-		memberService.signup(signUpRequest);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
-	}
+    @PostMapping
+    public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
+        memberService.signup(signUpRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
-	@PatchMapping("/me")
-	public ResponseEntity<?> updateMember(@Valid @RequestBody UpdateMemberRequest updateMemberRequest, @CurrentUser Member member){
-		memberService.updateMember(member, updateMemberRequest);
-		return ResponseEntity.status(HttpStatus.OK).build();
-	}
+    @PatchMapping("/me")
+    public ResponseEntity<?> updateMember(@Valid @RequestBody UpdateMemberRequest updateMemberRequest, @CurrentUser Member member) {
+        memberService.updateMember(member, updateMemberRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
-	@DeleteMapping("/me")
-	public ResponseEntity<?> deleteMember(@CurrentUser Member member){
-		memberService.deleteMember(member);
-		return ResponseEntity.status(HttpStatus.OK).build();
-	}
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deleteMember(@CurrentUser Member member) {
+        memberService.deleteMember(member);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
-	@GetMapping
-	@RequiresAdmin
-	public ResponseEntity<?> getAllMembers(){
-		List<MemberDto> members = memberService.getAllMembers();
-		return ResponseEntity.status(HttpStatus.OK).body(members);
-	}
+    @GetMapping
+    @RequiresAdmin
+    public ResponseEntity<?> getAllMembers(@CurrentUser Member member) {
+        List<MemberDto> members = memberService.getAllMembers(member);
+        return ResponseEntity.status(HttpStatus.OK).body(members);
+    }
 }
