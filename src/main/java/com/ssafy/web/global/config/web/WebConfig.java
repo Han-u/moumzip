@@ -2,7 +2,6 @@ package com.ssafy.web.global.config.web;
 
 import java.util.List;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,14 +12,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.ssafy.web.domain.member.entity.Provider;
 import com.ssafy.web.global.common.auth.AdminAuthorizationInterceptor;
 import com.ssafy.web.global.common.auth.MemberArgumentResolver;
-import com.ssafy.web.global.common.auth.jwt.JwtTokenProvider;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
+@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
-	@Bean
-	public JwtTokenProvider jwtTokenProvider(){
-		return new JwtTokenProvider();
-	}
+	private final AdminAuthorizationInterceptor adminAuthorizationInterceptor;
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		// 모든 경로에 대해
@@ -43,7 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new AdminAuthorizationInterceptor(jwtTokenProvider())) // jwt 검증하는 인터셉터를
+		registry.addInterceptor(adminAuthorizationInterceptor) // jwt 검증하는 인터셉터를
 			.addPathPatterns("/api/**"); // 해당 url에 적용
 	}
 

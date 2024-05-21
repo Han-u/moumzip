@@ -3,7 +3,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ssafyweb?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/ssafyweb?serverTimezone=Asia/Seoul&useUniCode=yes&characterEncoding=UTF-8
     username: ssafy
     password: ssafy
   jpa:
@@ -19,9 +19,9 @@ spring:
       secret-key: ${SPRING_JWT_SECRET_KEY:}
 
     access:
-        expiration: 1000
+        expiration: 600000
     refresh:
-        expiration: 10000
+        expiration: 21600000
 
 oauth2:
   client:
@@ -73,3 +73,6 @@ oauth2:
 mybatis:
   type-aliases-package: com.ssafy.web.*.model
   mapper-locations: classpath:mapper/**/*.xml
+logging:
+  level:
+    root: debug

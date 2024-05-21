@@ -44,10 +44,9 @@ public class Token extends BaseTimeEntity {
 		this.ipAddress = ipAddress;
 	}
 
-	public void updateToken(String accessToken, String refreshToken, Member member, String ipAddress){
+	public void updateToken(String accessToken, String refreshToken, String ipAddress){
 		this.accessToken = accessToken;
 		this.refreshToken = refreshToken;
 		this.ipAddress = ipAddress;
-		this.member = member;
 	}
 }

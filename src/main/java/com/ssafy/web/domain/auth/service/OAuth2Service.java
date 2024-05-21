@@ -42,27 +42,37 @@ public class OAuth2Service {
 		}
 
 		OAuth2User user = client.getOAuthUserFromCode(authCode);
-		if (user == null){
+		if (user == null) {
 			throw new OAuthException(ErrorCode.OAUTH2_AUTHENTICATION_FAILED);
 		}
 
-		System.out.println(user);
 		// check if signin or signup
 		Member member = memberRepository.findByEmail(user.getEmail())
-			.orElseGet(() -> Member.builder().email(user.getEmail())
+			.orElseGet(() -> Member.builder()
+				.email(user.getEmail())
 				.name(user.getName())
-				.provider(provider).build());
+				.provider(provider)
+				.build());
 
 		// member update
+		memberRepository.save(member);
 
 		// token create or update
-		Token token = tokenRepository.findById(2L).orElseGet(() -> Token.builder().build());
-		token.updateToken(null, null, null, null);
-		tokenRepository.save(token);
+		String accessToken = jwtTokenProvider.createAccessToken(member);
+		String refreshToken = jwtTokenProvider.createRefreshToken(member);
+
+		Token token = tokenRepository.findByMember(member).orElseGet(() -> Token.builder()
+			.member(member)
+			.build());
 
 		// token ip check
+		token.updateToken(accessToken, refreshToken,null);
+		tokenRepository.save(token);
 
-		return null;
+
+
+
+		return TokenDto.of(token);
 
 	}
 }

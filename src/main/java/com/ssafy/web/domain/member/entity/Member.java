@@ -1,6 +1,5 @@
 package com.ssafy.web.domain.member.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
@@ -9,7 +8,6 @@ import org.hibernate.annotations.SQLRestriction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.web.global.common.entity.BaseTimeEntity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -41,7 +39,6 @@ public class Member extends BaseTimeEntity {
 	private Provider provider;
 	@NotNull
 	private String name;
-	@NotNull
 	private String phone;
 	private int loginFailCnt;
 	private LocalDateTime lastLoginFailTime;

@@ -29,7 +29,7 @@ public class DepositDto {
 			.amount(deposit.getAmount())
 			.auctionDto(AuctionDto.of(deposit.getAuction()))
 			.depositStatus(deposit.getDepositStatus())
-			.bidPrice(deposit.getBid().get(0).getBidPrice()) // check
+			.bidPrice(0L) // check
 			.build();
 	}
 }
