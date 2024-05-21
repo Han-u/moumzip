@@ -16,6 +16,7 @@ import com.ssafy.web.domain.deposit.entity.Deposit;
 import com.ssafy.web.domain.deposit.entity.DepositStatus;
 import com.ssafy.web.domain.deposit.repository.DepositRepository;
 import com.ssafy.web.domain.member.entity.Member;
+import com.ssafy.web.global.common.util.OtpValidator;
 import com.ssafy.web.global.error.ErrorCode;
 import com.ssafy.web.global.error.exception.BusinessException;
 
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class DepositService {
 	private final AuctionRepository auctionRepository;
 	private final DepositRepository depositRepository;
+	private final OtpValidator otpValidator;
 
 	@Transactional
 	public void createDeposit(Member member, Long auctionId) {
@@ -59,12 +61,17 @@ public class DepositService {
 
 	@Transactional
 	public void setOtp(Member member, Long auctionId, OtpRequest otpRequest) {
+		// 경매 시작됐을 때만 세팅 가능
 		Deposit deposit = depositRepository.findByMember_MemberIdAndAuction_AuctionIdAndAuction_AuctionStatusAndDepositStatus(
 			member.getMemberId(),
 			auctionId,
 			AuctionStatus.PROGRESS,
 			DepositStatus.DEPOSITED
 		).orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST));
+
+		if(!otpValidator.isValidPassword(otpRequest.getOtp())){
+			throw new BusinessException(ErrorCode.BAD_REQUEST);
+		}
 
 		deposit.updateOtp(otpRequest.getOtp());
 		depositRepository.save(deposit);
