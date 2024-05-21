@@ -40,9 +40,10 @@ public class AuctionController {
     }
 
     @PostMapping
-//    @RequiresAdmin
-    public ResponseEntity<?> createAuction(@RequestBody AuctionCreateUpdate auctionCreateUpdate, MemberDto memberDto) {
+    @RequiresAdmin
+    public ResponseEntity<?> createAuction(@RequestBody AuctionCreateUpdate auctionCreateUpdate, @CurrentUser Member member) {
         // 멤버 받아서 서비스에서 어드민 확인
+        MemberDto memberDto = MemberDto.of(member);
         auctionService.createAuction(auctionCreateUpdate, memberDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
