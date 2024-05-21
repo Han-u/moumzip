@@ -91,26 +91,34 @@ public class Auction extends BaseTimeEntity {
 		this.winningBidder = auction.winningBidder;
 	}
 
-	public void updateWinner(Long winningBidPrice, Member member){
-		if(winningBidPrice <= this.winningBidPrice){
+	public void updateWinner(Long winningBidPrice, Member member) {
+		if (winningBidPrice <= this.winningBidPrice) {
 			throw new IllegalArgumentException("입력값이 최고가보다 낮습니다.");
 		}
 		this.winningBidPrice = winningBidPrice;
 		this.winningBidder = member;
 	}
 
-	public boolean isInProgress(){
-		if(this.getAuctionStatus() != AuctionStatus.PROGRESS){
-			return false;
-		}
-		return this.bidOpening.isAfter(LocalDateTime.now()) && this.bidClosingExtended.isBefore(LocalDateTime.now());
+	public boolean isInProgress() {
+		return this.auctionStatus == AuctionStatus.PROGRESS &&
+			this.bidOpening.isBefore(LocalDateTime.now()) &&
+			this.bidClosingExtended.isAfter(LocalDateTime.now());
 	}
 
-	public boolean isWithinParticipationPeriod(){
-		return this.getCreatedAt().toLocalDate().plusDays(5).isAfter(LocalDate.now()) && this.getBidOpening().minusDays(1).isBefore(LocalDateTime.now());
+	public boolean isWithinParticipationPeriod() {
+		return this.getCreatedAt().toLocalDate().plusDays(5).isBefore(LocalDate.now())
+			&& this.bidOpening.toLocalDate().isAfter(LocalDate.now());
 	}
 
-	public long getDepositPrice(){
+	public long getDepositPrice() {
 		return (long)(this.startingBidPrice * 0.1);
+	}
+
+	public void updateClosingExtend(long minute) {
+		if (bidClosingExtended.plusMinutes(minute).isAfter(bidClosing.plusHours(1))) {
+			bidClosingExtended = bidClosing.plusHours(1);
+		} else {
+			bidClosingExtended = bidClosingExtended.plusMinutes(minute);
+		}
 	}
 }

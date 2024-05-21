@@ -1,9 +1,11 @@
 package com.ssafy.web.global.common.auth;
 
+import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.ssafy.web.domain.auth.service.AuthService;
 import com.ssafy.web.domain.member.entity.Member;
 import com.ssafy.web.global.common.auth.jwt.JwtTokenProvider;
 import com.ssafy.web.global.error.ErrorCode;
@@ -17,12 +19,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminAuthorizationInterceptor implements HandlerInterceptor {
 	private final JwtTokenProvider jwtTokenProvider;
+	private final AuthService authService;
 
+	public boolean hasCurrentUser(HandlerMethod handlerMethod){
+		for(MethodParameter parameter: handlerMethod.getMethodParameters()){
+			if(parameter.hasParameterAnnotation(CurrentUser.class)){
+				return true;
+			}
+		}
+		return false;
+	}
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		if(!(handler instanceof HandlerMethod handlerMethod)){
 			return true;
 		}
+
+		RequiresAdmin requireMethod = handlerMethod.getMethodAnnotation(RequiresAdmin.class); // method에 @RequiresAdmin 여부
+		boolean requireClass = handlerMethod.getMethod().getDeclaringClass().isAnnotationPresent(RequiresAdmin.class); // class에 @RequiresAdmin 여부
+
+		boolean checkUser = hasCurrentUser(handlerMethod);
+		boolean requireAdmin = requireClass || requireMethod != null;
 
 		// 토큰 검증
 		String token = jwtTokenProvider.resolveToken(request);
@@ -31,24 +48,21 @@ public class AdminAuthorizationInterceptor implements HandlerInterceptor {
 			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
 
+
 		// 멤버 가져오기
 		Member member = jwtTokenProvider.extractMember(token);
-		if(member == null){
-			throw new BusinessException(ErrorCode.UNAUTHORIZED);
-		}
-		request.setAttribute("member", member);
 
-		RequiresAdmin requireMethod = handlerMethod.getMethodAnnotation(RequiresAdmin.class); // method에 @RequiresAdmin 여부
-		boolean requireClass = handlerMethod.getMethod().getDeclaringClass().isAnnotationPresent(RequiresAdmin.class); // class에 @RequiresAdmin 여부
-
-		if(requireMethod == null && !requireClass) { // @RequiresAdmin이 붙어있지 않다면 패스
+		if(!requireAdmin && !checkUser) { // @RequiresAdmin이 붙어있지 않다면 패스
+			request.setAttribute("member", member);
 			return true;
 		}
 
-		if(!member.isAdmin()){ // 권한이 없는 경우
+		member = authService.getMemberById(member.getMemberId());
+		if(requireAdmin && !member.isAdmin()){ // 권한이 없는 경우
 			throw new BusinessException(ErrorCode.FORBIDDEN);
 		}
 
+		request.setAttribute("member", member);
 		return true;
 	}
 }

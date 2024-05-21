@@ -59,4 +59,6 @@ public class MemberController {
 		List<MemberDto> members = memberService.getAllMembers();
 		return ResponseEntity.status(HttpStatus.OK).body(members);
 	}
+
+	// 계좌 등록
 }
