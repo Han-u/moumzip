@@ -17,6 +17,7 @@ spring:
   jwt:
     token:
       secret-key: ${SPRING_JWT_SECRET_KEY:}
+
     access:
         expiration: 600000
     refresh:

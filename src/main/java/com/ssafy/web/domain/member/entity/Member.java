@@ -60,7 +60,7 @@ public class Member extends BaseTimeEntity {
 		this.provider = provider;
 		this.name = name;
 		this.phone = phone;
-		this.loginFailCnt = loginFailCnt;
+		this.loginFailCnt = 0;
 		this.lastLoginFailTime = lastLoginFailTime;
 		this.dateOfBirth = dateOfBirth;
 		this.bank = bank;
@@ -74,4 +74,5 @@ public class Member extends BaseTimeEntity {
 		this.password = password;
 		this.phone = phone;
 	}
+
 }

@@ -48,7 +48,6 @@ public class AdminAuthorizationInterceptor implements HandlerInterceptor {
 			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
 
-
 		// 멤버 가져오기
 		Member member = jwtTokenProvider.extractMember(token);
 
