@@ -43,5 +43,4 @@ public class DepositController {
 		return ResponseEntity.status(HttpStatus.OK).body(myAuctions);
 	}
 
-
 }

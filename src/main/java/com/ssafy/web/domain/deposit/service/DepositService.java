@@ -20,7 +20,7 @@ import com.ssafy.web.domain.deposit.repository.DepositRepository;
 import com.ssafy.web.domain.member.entity.Member;
 import com.ssafy.web.external.toss.TossClient;
 import com.ssafy.web.external.toss.TossVirtualAccountRequest;
-import com.ssafy.web.global.common.util.OtpValidator;
+import com.ssafy.web.global.util.OtpValidator;
 import com.ssafy.web.global.error.ErrorCode;
 import com.ssafy.web.global.error.exception.BusinessException;
 
@@ -88,6 +88,8 @@ public class DepositService {
 		if(!otpValidator.isValidPassword(otpRequest.getOtp())){
 			throw new BusinessException(ErrorCode.BAD_REQUEST);
 		}
+
+		// TODO: OTP 너무 자주 바뀌면 감지 --> 최종적으로는 OTP가 아닌 휴대폰번호 1회 인증 및 자동 경매 한도를 정하여 OTP 자체를 쓸 일이 없게
 
 		deposit.updateOtp(otpRequest.getOtp());
 		depositRepository.save(deposit);

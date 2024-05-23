@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.ssafy.web.global.common.util.UserAgentUtil;
+import com.ssafy.web.global.util.UserAgentUtil;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;

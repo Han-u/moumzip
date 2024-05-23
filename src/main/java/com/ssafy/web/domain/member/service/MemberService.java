@@ -78,6 +78,7 @@ public class MemberService {
 
 
     public List<MaskedMemberDto> getAllMembers(Member member) {
+        // TODO: 이상한 멤버 밴 기록 포함. 멤버 정보는 데이터 마스킹. 마스킹 안 한 정보를 관리자 인증 후 볼 수 있게 할지는 결정X
         if(!member.isAdmin()) {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }

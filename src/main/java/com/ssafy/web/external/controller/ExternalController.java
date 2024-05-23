@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/external")
 @RequiredArgsConstructor
 public class ExternalController {
+	// 외부 서비스 콜백용
 
 	private final ExternalService externalService;
 

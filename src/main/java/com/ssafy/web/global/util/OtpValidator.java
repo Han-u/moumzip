@@ -1,4 +1,4 @@
-package com.ssafy.web.global.common.util;
+package com.ssafy.web.global.util;
 
 import org.springframework.stereotype.Component;
 

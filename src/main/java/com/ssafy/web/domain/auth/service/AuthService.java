@@ -36,6 +36,8 @@ public class AuthService {
 		Member member = memberRepository.findByEmail(requestMember.getEmail()).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 		Token token = tokenRepository.findByMember_MemberId(member.getMemberId()).orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST));
 
+		// FIXME: token에 accessToken, refreshToken 정보 확인하여 일치하지 않으면 토큰 없애버리기
+
 		String newAccessToken = jwtTokenProvider.createAccessToken(member);
 		String newRefreshToken = jwtTokenProvider.createRefreshToken(member);
 

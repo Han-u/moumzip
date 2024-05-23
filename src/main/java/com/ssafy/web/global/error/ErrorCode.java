@@ -1,6 +1,5 @@
 package com.ssafy.web.global.error;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.http.HttpStatus;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +26,7 @@ public enum ErrorCode {
     USER_NICKNAME_DUPLICATE(HttpStatus.CONFLICT, "U003", "사용중인 닉네임 입니다."),
     USER_CANNOT_DELETE(HttpStatus.NOT_ACCEPTABLE, "U004", "유저를 삭제할 수 없습니다."),
     ADMIN_CANNOT_DELETE(HttpStatus.NOT_ACCEPTABLE, "U005", "관리자는 삭제할 수 없습니다."),
+    ACCOUNT_NOT_REGISTERED(HttpStatus.BAD_REQUEST, "U006", "계좌가 등록되지 않았습니다."),
 
     // auction
     AUCTION_NOT_IN_PROGRESS(HttpStatus.BAD_REQUEST, "AC001", "진행중인 경매가 아닙니다."),

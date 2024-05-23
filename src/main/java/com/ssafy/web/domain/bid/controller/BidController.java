@@ -27,6 +27,7 @@ public class BidController {
 
 	@GetMapping
 	public ResponseEntity<?> getBidList(@PathVariable Long auctionId) {
+		// TODO: PAGE, 일정 개수, Filter 등
 		List<BidDto> bidList = bidService.getBidList(auctionId);
 		return ResponseEntity.status(HttpStatus.OK).body(bidList);
 	}

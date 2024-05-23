@@ -47,4 +47,6 @@ public class DepositScheduler {
 		LocalDateTime now = LocalDateTime.now().minusMinutes(10).withSecond(0).withNano(0);
 		depositService.updateNotAwarded(now);
 	}
+
+	// TODO: 취소된 경매 상태 바꾸기
 }

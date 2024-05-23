@@ -56,6 +56,7 @@ public class AuctionService {
         // 5개 뺀 DTO
         validateAuctionTime(auctionCreateUpdate.getBidOpening(), auctionCreateUpdate.getBidClosing());
 
+        // FIXME: auctionStatus, bidClosingExtended 값 세팅이 안 되어 있어용
         auctionRepository.save(auctionCreateUpdate.toEntity());
     }
 
@@ -88,12 +89,12 @@ public class AuctionService {
         }
         Auction auction = findAuctionById(auctionId).toEntity();
 
+        // FIXME: 여기도 경계값 확인 필요합니다!
         if (auction.getCreatedAt().isBefore(LocalDateTime.now().minusDays(5)) ||
                 auction.getBidOpening().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new BusinessException(ErrorCode.AUCTION_CANNOT_DELETE);
         }
         // 경매 삭제
-
         auctionRepository.delete(auction);
     }
 
