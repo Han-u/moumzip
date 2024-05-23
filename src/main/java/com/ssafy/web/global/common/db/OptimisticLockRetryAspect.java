@@ -7,7 +7,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import jakarta.persistence.OptimisticLockException;
 
@@ -21,11 +20,12 @@ public class OptimisticLockRetryAspect {
 		Exception exception = null;
 		for(int attempt = 0; attempt < retry.maxRetries(); attempt++){
 			try {
-				if(!TransactionSynchronizationManager.isActualTransactionActive()){
-					return handleWithNewTransaction(joinPoint);
-				} else {
-					return joinPoint.proceed();
-				}
+				return joinPoint.proceed();
+				// if(!TransactionSynchronizationManager.isActualTransactionActive()){
+				// 	return handleWithNewTransaction(joinPoint);
+				// } else {
+				// 	return joinPoint.proceed();
+				// }
 			} catch (Throwable e){
 				if(!(e instanceof OptimisticLockException)){
 					throw e;

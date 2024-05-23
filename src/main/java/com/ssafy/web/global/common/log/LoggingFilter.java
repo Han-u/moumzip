@@ -15,7 +15,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
-@Component
+@Component // 확인
 public class LoggingFilter implements Filter {
 	private static final Logger logger = LoggerFactory.getLogger(LoggingFilter.class);
 

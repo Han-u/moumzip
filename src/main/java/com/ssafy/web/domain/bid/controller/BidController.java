@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BidController {
 	private final BidService bidService;
-
 	@GetMapping
 	public ResponseEntity<?> getBidList(@PathVariable Long auctionId) {
 		// TODO: PAGE, 일정 개수, Filter 등

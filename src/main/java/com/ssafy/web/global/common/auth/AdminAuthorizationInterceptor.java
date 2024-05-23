@@ -52,11 +52,11 @@ public class AdminAuthorizationInterceptor implements HandlerInterceptor {
 		Member member = jwtTokenProvider.extractMember(token);
 
 		if(!requireAdmin && !checkUser) { // @RequiresAdmin이 붙어있지 않다면 패스
-			request.setAttribute("member", member);
+			request.setAttribute("member", member); // FIXME: currentUser 할일이 없어서 이 로직이 말이 안됨... 급하게 고친거라서 구조 변경 필요
 			return true;
 		}
 
-		member = authService.getMemberById(member.getMemberId());
+		member = authService.getMemberById(member.getMemberId()); // id email -> 동시에 하는게 할수있다...
 		if(requireAdmin && !member.isAdmin()){ // 권한이 없는 경우
 			throw new BusinessException(ErrorCode.FORBIDDEN);
 		}
