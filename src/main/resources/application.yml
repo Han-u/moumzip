@@ -76,3 +76,8 @@ mybatis:
 logging:
   level:
     root: debug
+
+external:
+  toss:
+    toss-api-url: "http://localhost:8080/toss/va"
+    toss-api-key: "testtesttest"

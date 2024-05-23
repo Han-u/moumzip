@@ -48,12 +48,23 @@ public class DepositService {
 		}
 
 		// 가상 계좌 발급
+		TossVirtualAccountRequest body = TossVirtualAccountRequest.builder()
+			.amount(auction.getDepositPrice())
+			.bank(member.getBank())
+			.customerName(member.getName())
+			.orderId(auctionId+"_"+ member.getMemberId())
+			.orderName(auction.getLocation().length() > 20 ? auction.getLocation().substring(0, 20) : auction.getLocation())
+			.build();
+
+		String virtualAccount = tossClient.issueVirtualAccount(body);
 
 		Deposit participation = Deposit.builder()
 			.amount(auction.getDepositPrice())
 			.member(member)
 			.auction(auction)
 			.depositStatus(DepositStatus.PENDING_DEPOSIT)
+			.bank(member.getBank())
+			.virtualAccount(virtualAccount)
 			.build();
 
 		depositRepository.save(participation);
