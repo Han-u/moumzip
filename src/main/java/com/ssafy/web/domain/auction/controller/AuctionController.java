@@ -28,7 +28,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auctions")
 @RequiredArgsConstructor
 public class AuctionController {
-    private final AuctionService auctionService;
+    private final AuctionService auctionService; // autowired 차이점
+
 
     // 몇 개 가져올지?, 파라미터로 옵션을 받아서 옵션에 따라 진행중, 뭐 어쩌고
     // spring data jpa 페이징 기능 활용, page 리턴

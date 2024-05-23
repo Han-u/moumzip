@@ -35,8 +35,9 @@ public class DepositScheduler {
 				} else {
 					notAwardedDeposit.add(deposit);
 				}
-			}
+			} // FIXME: else 어디감??
 		}
+		// FIXME: 그러게?
 		depositService.updateRefundedDeposits(DepositStatus.REFUNDED_CANCEL, canceledDeposit);
 		depositService.updateRefundedDeposits(DepositStatus.REFUNDED_NOT_AWARDED, notAwardedDeposit);
 	}

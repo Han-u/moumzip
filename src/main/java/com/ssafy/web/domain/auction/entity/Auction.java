@@ -3,7 +3,7 @@ package com.ssafy.web.domain.auction.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SQLDelete;
 
 import com.ssafy.web.domain.member.entity.Member;
 import com.ssafy.web.global.common.entity.BaseTimeEntity;
@@ -26,11 +26,11 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@SQLRestriction("auction_status = CANCELED")
+@SQLDelete(sql = "update auction set auction_status = CANCELED where auction_id = ?") // fixme
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Auction extends BaseTimeEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //
 	private Long auctionId;
 
 	@Version

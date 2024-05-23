@@ -18,7 +18,6 @@ import com.ssafy.web.domain.bid.repository.BidRepository;
 import com.ssafy.web.domain.deposit.entity.Deposit;
 import com.ssafy.web.domain.deposit.repository.DepositRepository;
 import com.ssafy.web.domain.member.entity.Member;
-import com.ssafy.web.global.common.db.Retry;
 import com.ssafy.web.global.error.ErrorCode;
 import com.ssafy.web.global.error.exception.BusinessException;
 
@@ -59,9 +58,26 @@ public class BidService {
 			throw new BusinessException(ErrorCode.AUCTION_ALREADY_PARTICIPATED);
 		}
 
+		// 현재 최고가보다 높으면 갱신
+		if(auction.getWinningBidPrice() < bidRequest.getBidPrice()){
+			auction.updateWinner(bidRequest.getBidPrice(), member);
+		}
+
+		// 호가경매, 끝날때 되면 시간 증가
+		if(auction.getAuctionType() == AuctionType.ENGLISH){
+			if( Duration.between(LocalDateTime.now(), auction.getBidClosingExtended()).compareTo(FIVE_MINUTES) <= 0&&
+				auction.getBidClosing().plusHours(1).isAfter(auction.getBidClosingExtended())){
+				if(auction.getBidClosing().plusMinutes(30).isAfter(auction.getBidClosingExtended())){
+					auction.updateClosingExtend(5);
+				} else {
+					auction.updateClosingExtend(3);
+				}
+			}
+		}
 
 	}
 
+	/*
 	@Retry
 	@Transactional
 	public void retryUpdateWinningBidPrice(Long auctionId, Member member, Long bidPrice){
@@ -84,4 +100,5 @@ public class BidService {
 			}
 		}
 	}
+	 */
 }

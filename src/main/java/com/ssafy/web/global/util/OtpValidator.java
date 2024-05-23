@@ -12,7 +12,7 @@ public class OtpValidator {
 		2. 123456, 654321 등 6자리가 연속된 숫자인지
 		3. 000000, 111111 등 6자리가 모두 같은지
 		4. 패턴이 반복되는지
-		5. 또 있나??
+		5. 또 있나?? --> 계속 똑같은걸 안쓰도록
 	 */
 
 	public boolean isValidPassword(String password) {

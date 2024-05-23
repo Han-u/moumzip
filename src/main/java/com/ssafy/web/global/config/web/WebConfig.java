@@ -48,5 +48,5 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(adminAuthorizationInterceptor) // jwt 검증하는 인터셉터를
 			.addPathPatterns("/api/**"); // 해당 url에 적용
 	}
-
+	//filter 등록 ㅋㅋ
 }
