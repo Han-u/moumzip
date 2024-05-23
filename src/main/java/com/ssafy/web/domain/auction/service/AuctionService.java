@@ -14,7 +14,6 @@ import com.ssafy.web.domain.auction.entity.Auction;
 import com.ssafy.web.domain.auction.entity.AuctionStatus;
 import com.ssafy.web.domain.auction.repository.AuctionRepository;
 import com.ssafy.web.domain.deposit.repository.DepositRepository;
-import com.ssafy.web.domain.member.dto.MemberDto;
 import com.ssafy.web.domain.member.entity.Member;
 import com.ssafy.web.global.error.ErrorCode;
 import com.ssafy.web.global.error.exception.BusinessException;
@@ -46,8 +45,8 @@ public class AuctionService {
     }
 
     @Transactional
-    public void createAuction(AuctionCreateUpdate auctionCreateUpdate, MemberDto memberDto) {
-        if (!MemberDto.toEntity(memberDto).isAdmin()) {
+    public void createAuction(AuctionCreateUpdate auctionCreateUpdate, Member member) {
+        if (!member.isAdmin()) {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
         // 유효한 시간인지 검증
@@ -70,6 +69,7 @@ public class AuctionService {
         // 그 이후 부터는 삭제!
         // 생성 데이터와 비슷
         Auction currentAuction = auctionRepository.findById(auctionId).orElseThrow(() -> new BusinessException(ErrorCode.AUCTION_NOT_FOUND));
+        // FIXME: 시간까지 따지면 5일 경계가 안 맞는 것 같아요! + 이미 취소됐으면 update할 필요 없을 듯??
         if (currentAuction.getCreatedAt().isBefore(LocalDateTime.now().minusDays(5))) {
             throw new BusinessException(ErrorCode.AUCTION_CANNOT_UPDATE);
         }

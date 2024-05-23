@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.ssafy.web.domain.deposit.entity.DepositStatus;
 import com.ssafy.web.domain.deposit.repository.DepositRepository;
+import com.ssafy.web.domain.member.dto.AccountRegisterRequest;
 import com.ssafy.web.domain.member.dto.MaskedMemberDto;
 import com.ssafy.web.domain.member.dto.MemberDto;
 import com.ssafy.web.domain.member.dto.SignUpRequest;
@@ -18,7 +19,7 @@ import com.ssafy.web.domain.member.entity.Member;
 import com.ssafy.web.domain.member.repository.MemberRepository;
 import com.ssafy.web.global.error.ErrorCode;
 import com.ssafy.web.global.error.exception.BusinessException;
-import com.ssafy.web.global.util.MakeSalt;
+import com.ssafy.web.global.util.SaltUtil;
 
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
@@ -84,5 +85,16 @@ public class MemberService {
         }
         List<Member> members = memberRepository.findAll();
         return members.stream().map(MaskedMemberDto::of).collect(Collectors.toList());
+    }
+
+	public void checkAccount(Member member) {
+        if(member.getAccountNumber() == null || member.getAccountNumber().isBlank()){
+            throw new BusinessException(ErrorCode.ACCOUNT_NOT_REGISTERED);
+        }
+	}
+
+    public void registerAccount(Member member, AccountRegisterRequest dto) {
+        // TODO: 외부 서비스를 통해 정말 본인 계좌인지 확인 -> 형식X, 지원은행X, 본인계좌X면 튕기기
+        member.updateAccount(dto.getAccountNumber(), dto.getBank());
     }
 }
