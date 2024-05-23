@@ -44,6 +44,10 @@ public class UserAgentUtil {
 		return browser;
 	}
 
+	public static String getUserAgent(HttpServletRequest request){
+		return getWebType(request) + getOs(request) + getBrowser(request);
+	}
+
 	public static String getOs(HttpServletRequest request) {
 		String agent = request.getHeader("User-Agent");
 		String os = null;
