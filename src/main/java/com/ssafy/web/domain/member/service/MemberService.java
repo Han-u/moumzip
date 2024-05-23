@@ -4,15 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ssafy.web.domain.deposit.entity.Deposit;
-import com.ssafy.web.domain.deposit.entity.DepositStatus;
-import com.ssafy.web.domain.deposit.repository.DepositRepository;
-import com.ssafy.web.global.util.MakeSalt;
-import jakarta.validation.Valid;
-import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import com.ssafy.web.domain.deposit.entity.DepositStatus;
+import com.ssafy.web.domain.deposit.repository.DepositRepository;
+import com.ssafy.web.domain.member.dto.MaskedMemberDto;
 import com.ssafy.web.domain.member.dto.MemberDto;
 import com.ssafy.web.domain.member.dto.SignUpRequest;
 import com.ssafy.web.domain.member.dto.UpdateMemberRequest;
@@ -20,9 +18,11 @@ import com.ssafy.web.domain.member.entity.Member;
 import com.ssafy.web.domain.member.repository.MemberRepository;
 import com.ssafy.web.global.error.ErrorCode;
 import com.ssafy.web.global.error.exception.BusinessException;
+import com.ssafy.web.global.util.MakeSalt;
 
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +67,7 @@ public class MemberService {
         }
         // 일반 회원
         // memberId로 deposit 테이블 확인 후 status가 "CANCELLED", "PENDING_DEPOSIT", "DEPOSITED"이거나 "AWARDED"인 경우 취소 불가능.
-        List<DepositStatus> validStatusList = Arrays.asList(DepositStatus.DEPOSITED, DepositStatus.AWARDED, DepositStatus.CANCELLED, DepositStatus.PENDING_DEPOSIT);
+        List<DepositStatus> validStatusList = Arrays.asList(DepositStatus.DEPOSITED, DepositStatus.AWARDED, DepositStatus.CANCELED, DepositStatus.PENDING_DEPOSIT, DepositStatus.NOT_AWARDED);
         boolean hasActiveDeposits = depositRepository.existsByMember_MemberIdAndDepositStatusIn(member.getMemberId(), validStatusList);
 
         if (hasActiveDeposits) {
@@ -77,11 +77,11 @@ public class MemberService {
     }
 
 
-    public List<MemberDto> getAllMembers(Member member) {
+    public List<MaskedMemberDto> getAllMembers(Member member) {
         if(!member.isAdmin()) {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
         List<Member> members = memberRepository.findAll();
-        return members.stream().map(MemberDto::of).collect(Collectors.toList());
+        return members.stream().map(MaskedMemberDto::of).collect(Collectors.toList());
     }
 }
