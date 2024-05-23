@@ -1,12 +1,12 @@
 package com.ssafy.web.global.util;
 
-import org.springframework.stereotype.Component;
-
 import java.security.SecureRandom;
 import java.util.Base64;
 
+import org.springframework.stereotype.Component;
+
 @Component
-public class MakeSalt {
+public class SaltUtil {
     private static final int SALT_LENGTH = 16;
 
     public static String generateSalt() {

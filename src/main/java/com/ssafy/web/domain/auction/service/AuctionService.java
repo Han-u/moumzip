@@ -1,23 +1,24 @@
 package com.ssafy.web.domain.auction.service;
 
-import com.ssafy.web.domain.auction.dto.AuctionCreateUpdate;
-import com.ssafy.web.domain.auction.dto.AuctionDetail;
-import com.ssafy.web.domain.auction.dto.AuctionList;
-import com.ssafy.web.domain.auction.entity.Auction;
-import com.ssafy.web.domain.auction.repository.AuctionRepository;
+import java.time.LocalDateTime;
 
-import com.ssafy.web.domain.deposit.repository.DepositRepository;
-import com.ssafy.web.domain.member.dto.MemberDto;
-import com.ssafy.web.domain.member.entity.Member;
-import com.ssafy.web.global.error.ErrorCode;
-import com.ssafy.web.global.error.exception.BusinessException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import com.ssafy.web.domain.auction.dto.AuctionCreateUpdate;
+import com.ssafy.web.domain.auction.dto.AuctionDetail;
+import com.ssafy.web.domain.auction.dto.AuctionList;
+import com.ssafy.web.domain.auction.entity.Auction;
+import com.ssafy.web.domain.auction.entity.AuctionStatus;
+import com.ssafy.web.domain.auction.repository.AuctionRepository;
+import com.ssafy.web.domain.deposit.repository.DepositRepository;
+import com.ssafy.web.domain.member.entity.Member;
+import com.ssafy.web.global.error.ErrorCode;
+import com.ssafy.web.global.error.exception.BusinessException;
+
+import lombok.RequiredArgsConstructor;
 
 
 @Service
@@ -30,7 +31,7 @@ public class AuctionService {
 
     public Page<AuctionList> findAllAuctions(String status, Pageable pageable) {
         if (status != null) {
-            return auctionRepository.findByAuctionStatusOrderByCreatedAtDesc(status, pageable)
+            return auctionRepository.findByAuctionStatusOrderByCreatedAtDesc(AuctionStatus.valueOf(status), pageable)
                     .map(AuctionList::of);
         }
         return auctionRepository.findAllByOrderByCreatedAtDesc(pageable)
@@ -44,8 +45,8 @@ public class AuctionService {
     }
 
     @Transactional
-    public void createAuction(AuctionCreateUpdate auctionCreateUpdate, MemberDto memberDto) {
-        if (!MemberDto.toEntity(memberDto).isAdmin()) {
+    public void createAuction(AuctionCreateUpdate auctionCreateUpdate, Member member) {
+        if (!member.isAdmin()) {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
         // 유효한 시간인지 검증
@@ -54,6 +55,7 @@ public class AuctionService {
         // 5개 뺀 DTO
         validateAuctionTime(auctionCreateUpdate.getBidOpening(), auctionCreateUpdate.getBidClosing());
 
+        // FIXME: auctionStatus, bidClosingExtended 값 세팅이 안 되어 있어용
         auctionRepository.save(auctionCreateUpdate.toEntity());
     }
 
@@ -67,6 +69,7 @@ public class AuctionService {
         // 그 이후 부터는 삭제!
         // 생성 데이터와 비슷
         Auction currentAuction = auctionRepository.findById(auctionId).orElseThrow(() -> new BusinessException(ErrorCode.AUCTION_NOT_FOUND));
+        // FIXME: 시간까지 따지면 5일 경계가 안 맞는 것 같아요! + 이미 취소됐으면 update할 필요 없을 듯??
         if (currentAuction.getCreatedAt().isBefore(LocalDateTime.now().minusDays(5))) {
             throw new BusinessException(ErrorCode.AUCTION_CANNOT_UPDATE);
         }
@@ -86,14 +89,13 @@ public class AuctionService {
         }
         Auction auction = findAuctionById(auctionId).toEntity();
 
+        // FIXME: 여기도 경계값 확인 필요합니다!
         if (auction.getCreatedAt().isBefore(LocalDateTime.now().minusDays(5)) ||
                 auction.getBidOpening().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new BusinessException(ErrorCode.AUCTION_CANNOT_DELETE);
         }
         // 경매 삭제
-
-        auction.delete();
-        auctionRepository.save(auction);
+        auctionRepository.delete(auction);
     }
 
     private void validateAuctionTime(LocalDateTime bidOpening, LocalDateTime bidClosing) {
@@ -104,5 +106,15 @@ public class AuctionService {
         if (bidClosing.isBefore(bidOpening.plusHours(2))) {
             throw new BusinessException(ErrorCode.AUCTION_INVALID_TIME);
         }
+    }
+
+    @Transactional
+    public int updateAuctionStatus(AuctionStatus sourceStatus, AuctionStatus targetStatus, LocalDateTime start){
+        return auctionRepository.updateStatusByDuration(sourceStatus, targetStatus, start);
+    }
+
+    @Transactional
+    public int updateAuctionsEndingBefore(AuctionStatus sourceStatus, AuctionStatus targetStatus, LocalDateTime now) {
+        return auctionRepository.updateAuctionsEndingBefore(sourceStatus, targetStatus, now);
     }
 }

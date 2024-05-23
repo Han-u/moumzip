@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.web.domain.member.dto.AccountRegisterRequest;
+import com.ssafy.web.domain.member.dto.MaskedMemberDto;
 import com.ssafy.web.domain.member.dto.MemberDto;
 import com.ssafy.web.domain.member.dto.SignUpRequest;
 import com.ssafy.web.domain.member.dto.UpdateMemberRequest;
@@ -56,9 +58,21 @@ public class MemberController {
     @GetMapping
     @RequiresAdmin
     public ResponseEntity<?> getAllMembers(@CurrentUser Member member) {
-        List<MemberDto> members = memberService.getAllMembers(member);
+        List<MaskedMemberDto> members = memberService.getAllMembers(member);
         return ResponseEntity.status(HttpStatus.OK).body(members);
     }
 
-	// 계좌 등록
+    @GetMapping("/accounts")
+    public ResponseEntity<?> checkAccount(@CurrentUser Member member){
+        memberService.checkAccount(member);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
+    // 계좌 등록
+    @PostMapping("/accounts")
+    public ResponseEntity<?> registerAccount(@CurrentUser Member member, @RequestBody AccountRegisterRequest dto){
+        memberService.registerAccount(member, dto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

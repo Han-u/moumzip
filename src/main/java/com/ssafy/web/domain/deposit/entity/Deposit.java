@@ -50,6 +50,7 @@ public class Deposit extends BaseTimeEntity {
 	private Auction auction;
 
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private DepositStatus depositStatus;
 
 	@OneToMany(mappedBy = "deposit")
@@ -76,6 +77,11 @@ public class Deposit extends BaseTimeEntity {
 			throw new IllegalArgumentException("");
 		}
 		this.otp = otp;
+	}
+
+	public void setDepositStatus(DepositStatus status){
+		// valid check
+		this.depositStatus = status;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.ssafy.web.global.common.util;
+package com.ssafy.web.global.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -42,6 +42,10 @@ public class UserAgentUtil {
 			}
 		}
 		return browser;
+	}
+
+	public static String getUserAgent(HttpServletRequest request){
+		return getWebType(request) + getOs(request) + getBrowser(request);
 	}
 
 	public static String getOs(HttpServletRequest request) {

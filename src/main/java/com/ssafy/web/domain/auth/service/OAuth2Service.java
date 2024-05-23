@@ -65,12 +65,9 @@ public class OAuth2Service {
 			.member(member)
 			.build());
 
-		// token ip check
+		// token ip check --> 하려고 했지만 단순 IP check만으로는 의미 없다고 판단.
 		token.updateToken(accessToken, refreshToken,null);
 		tokenRepository.save(token);
-
-
-
 
 		return TokenDto.of(token);
 

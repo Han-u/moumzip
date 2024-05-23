@@ -33,7 +33,7 @@ public class Token extends BaseTimeEntity {
 	@NotNull
 	private String refreshToken;
 
-	private String ipAddress;
+	private String ipAddress; // 원래 IP 검증 로직을 넣으려고 했으나, 단순하게 IP만 확인하는 것은 어렵다고 판단.
 
 	@Builder
 	public Token(Long tokenId, Member member, String accessToken, String refreshToken, String ipAddress) {

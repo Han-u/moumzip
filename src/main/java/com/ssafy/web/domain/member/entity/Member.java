@@ -34,6 +34,7 @@ public class Member extends BaseTimeEntity {
 	private String email;
 	@JsonIgnore
 	private String password;
+	@JsonIgnore
 	private String salt;
 	@Enumerated(EnumType.STRING)
 	private Provider provider;
@@ -75,4 +76,8 @@ public class Member extends BaseTimeEntity {
 		this.phone = phone;
 	}
 
+	public void updateAccount(String accountNumber, String bank){
+		this.accountNumber = accountNumber;
+		this.bank = bank;
+	}
 }

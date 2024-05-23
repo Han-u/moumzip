@@ -25,6 +25,7 @@ public class Bid extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bidId;
 
+	@NotNull
 	private Long bidPrice;
 
 	@ManyToOne(fetch = FetchType.LAZY)
