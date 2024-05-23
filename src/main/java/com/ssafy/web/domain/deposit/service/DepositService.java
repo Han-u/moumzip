@@ -1,5 +1,7 @@
 package com.ssafy.web.domain.deposit.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +18,8 @@ import com.ssafy.web.domain.deposit.entity.Deposit;
 import com.ssafy.web.domain.deposit.entity.DepositStatus;
 import com.ssafy.web.domain.deposit.repository.DepositRepository;
 import com.ssafy.web.domain.member.entity.Member;
+import com.ssafy.web.external.toss.TossClient;
+import com.ssafy.web.external.toss.TossVirtualAccountRequest;
 import com.ssafy.web.global.common.util.OtpValidator;
 import com.ssafy.web.global.error.ErrorCode;
 import com.ssafy.web.global.error.exception.BusinessException;
@@ -29,6 +33,7 @@ public class DepositService {
 	private final AuctionRepository auctionRepository;
 	private final DepositRepository depositRepository;
 	private final OtpValidator otpValidator;
+	private final TossClient tossClient;
 
 	@Transactional
 	public void createDeposit(Member member, Long auctionId) {
@@ -91,5 +96,22 @@ public class DepositService {
 	public List<DepositDto> getMyAuctions(Member member) {
 		List<Deposit> myAuctions = depositRepository.findByMember_MemberId(member.getMemberId());
 		return myAuctions.stream().map(DepositDto::of).collect(Collectors.toList());
+	}
+
+	public List<Deposit> getRefundDeposit(){
+		List<DepositStatus> statuses = new ArrayList<>();
+		statuses.add(DepositStatus.CANCELED);
+		statuses.add(DepositStatus.NOT_AWARDED);
+		return depositRepository.findByDepositStatusIn(statuses);
+	}
+
+	@Transactional
+	public void updateRefundedDeposits(DepositStatus depositStatus, List<Deposit> depositList){
+		depositRepository.updateRefundedDeposit(depositStatus, depositList);
+	}
+
+	@Transactional
+	public void updateNotAwarded(LocalDateTime now) {
+		depositRepository.updatedNotAwarded(now);
 	}
 }

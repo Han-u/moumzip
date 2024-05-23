@@ -78,4 +78,9 @@ public class Deposit extends BaseTimeEntity {
 		this.otp = otp;
 	}
 
+	public void setDepositStatus(DepositStatus status){
+		// valid check
+		this.depositStatus = status;
+	}
+
 }

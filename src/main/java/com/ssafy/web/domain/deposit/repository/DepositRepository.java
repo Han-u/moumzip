@@ -1,10 +1,12 @@
 package com.ssafy.web.domain.deposit.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.ssafy.web.domain.deposit.entity.DepositStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import com.ssafy.web.domain.auction.entity.AuctionStatus;
 import com.ssafy.web.domain.deposit.entity.Deposit;
@@ -19,4 +21,13 @@ public interface DepositRepository extends JpaRepository<Deposit, Long> {
 	boolean existsByMember_MemberIdAndDepositStatusIn(Long memberId, List<DepositStatus> depositStatusList);
 
 	boolean existsByAuction_AuctionIdAndDepositStatusIn(Long AuctionId, List<DepositStatus> depositStatusList);
+
+	List<Deposit> findByDepositStatusIn(List<DepositStatus> statuses);
+	@Modifying
+	@Query("UPDATE Deposit SET depositStatus = :depositStatus where depositId in :depositList")
+	int updateRefundedDeposit(DepositStatus depositStatus, List<Deposit> depositList);
+
+	@Modifying
+	@Query("")
+	void updatedNotAwarded(LocalDateTime now);
 }

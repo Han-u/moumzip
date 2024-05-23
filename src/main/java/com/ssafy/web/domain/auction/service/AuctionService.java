@@ -1,23 +1,25 @@
 package com.ssafy.web.domain.auction.service;
 
-import com.ssafy.web.domain.auction.dto.AuctionCreateUpdate;
-import com.ssafy.web.domain.auction.dto.AuctionDetail;
-import com.ssafy.web.domain.auction.dto.AuctionList;
-import com.ssafy.web.domain.auction.entity.Auction;
-import com.ssafy.web.domain.auction.repository.AuctionRepository;
+import java.time.LocalDateTime;
 
-import com.ssafy.web.domain.deposit.repository.DepositRepository;
-import com.ssafy.web.domain.member.dto.MemberDto;
-import com.ssafy.web.domain.member.entity.Member;
-import com.ssafy.web.global.error.ErrorCode;
-import com.ssafy.web.global.error.exception.BusinessException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import com.ssafy.web.domain.auction.dto.AuctionCreateUpdate;
+import com.ssafy.web.domain.auction.dto.AuctionDetail;
+import com.ssafy.web.domain.auction.dto.AuctionList;
+import com.ssafy.web.domain.auction.entity.Auction;
+import com.ssafy.web.domain.auction.entity.AuctionStatus;
+import com.ssafy.web.domain.auction.repository.AuctionRepository;
+import com.ssafy.web.domain.deposit.repository.DepositRepository;
+import com.ssafy.web.domain.member.dto.MemberDto;
+import com.ssafy.web.domain.member.entity.Member;
+import com.ssafy.web.global.error.ErrorCode;
+import com.ssafy.web.global.error.exception.BusinessException;
+
+import lombok.RequiredArgsConstructor;
 
 
 @Service
@@ -30,7 +32,7 @@ public class AuctionService {
 
     public Page<AuctionList> findAllAuctions(String status, Pageable pageable) {
         if (status != null) {
-            return auctionRepository.findByAuctionStatusOrderByCreatedAtDesc(status, pageable)
+            return auctionRepository.findByAuctionStatusOrderByCreatedAtDesc(AuctionStatus.valueOf(status), pageable)
                     .map(AuctionList::of);
         }
         return auctionRepository.findAllByOrderByCreatedAtDesc(pageable)
@@ -92,8 +94,7 @@ public class AuctionService {
         }
         // 경매 삭제
 
-        auction.delete();
-        auctionRepository.save(auction);
+        auctionRepository.delete(auction);
     }
 
     private void validateAuctionTime(LocalDateTime bidOpening, LocalDateTime bidClosing) {
@@ -104,5 +105,15 @@ public class AuctionService {
         if (bidClosing.isBefore(bidOpening.plusHours(2))) {
             throw new BusinessException(ErrorCode.AUCTION_INVALID_TIME);
         }
+    }
+
+    @Transactional
+    public int updateAuctionStatus(AuctionStatus sourceStatus, AuctionStatus targetStatus, LocalDateTime start){
+        return auctionRepository.updateStatusByDuration(sourceStatus, targetStatus, start);
+    }
+
+    @Transactional
+    public int updateAuctionsEndingBefore(AuctionStatus sourceStatus, AuctionStatus targetStatus, LocalDateTime now) {
+        return auctionRepository.updateAuctionsEndingBefore(sourceStatus, targetStatus, now);
     }
 }
