@@ -34,6 +34,7 @@ public class Member extends BaseTimeEntity {
 	private String email;
 	@JsonIgnore
 	private String password;
+	@JsonIgnore
 	private String salt;
 	@Enumerated(EnumType.STRING)
 	private Provider provider;

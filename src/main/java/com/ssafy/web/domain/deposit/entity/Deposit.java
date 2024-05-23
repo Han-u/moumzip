@@ -50,6 +50,7 @@ public class Deposit extends BaseTimeEntity {
 	private Auction auction;
 
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private DepositStatus depositStatus;
 
 	@OneToMany(mappedBy = "deposit")

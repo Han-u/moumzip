@@ -20,8 +20,6 @@ public interface DepositRepository extends JpaRepository<Deposit, Long> {
 
 	boolean existsByMember_MemberIdAndDepositStatusIn(Long memberId, List<DepositStatus> depositStatusList);
 
-	boolean existsByAuction_AuctionIdAndDepositStatusIn(Long AuctionId, List<DepositStatus> depositStatusList);
-
 	List<Deposit> findByDepositStatusIn(List<DepositStatus> statuses);
 	@Modifying
 	@Query("UPDATE Deposit SET depositStatus = :depositStatus where depositId in :depositList")

@@ -1,4 +1,4 @@
-package com.ssafy.web.global.common;
+package com.ssafy.web.global.common.log;
 
 import java.io.IOException;
 

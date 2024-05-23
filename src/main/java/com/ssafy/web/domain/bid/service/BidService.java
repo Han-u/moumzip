@@ -44,6 +44,11 @@ public class BidService {
 		Deposit deposit = depositRepository.findByMember_MemberIdAndAuction_AuctionId(member.getMemberId(), auctionId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.AUCTION_NOT_QUALIFIED));
 		Auction auction = deposit.getAuction();
+
+		if(!deposit.getOtp().equals(bidRequest.getOtp())){
+			throw new BusinessException(ErrorCode.BAD_REQUEST);
+		}
+
 		// 경매 열려있는지
 		if(auction.isInProgress()){
 			throw new BusinessException(ErrorCode.AUCTION_NOT_IN_PROGRESS);

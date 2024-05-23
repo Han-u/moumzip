@@ -40,7 +40,7 @@ public class MemberService {
 
     @Transactional
     public void signup(SignUpRequest signUpRequest) {
-        String salt = MakeSalt.generateSalt();
+        String salt = SaltUtil.generateSalt();
         Member member = signUpRequest.toEntity(salt);
         memberRepository.save(member);
     }

@@ -45,6 +45,7 @@ public class Auction extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private Purpose purpose;
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private AuctionStatus auctionStatus;
 	@Enumerated(EnumType.STRING)
 	private AuctionType auctionType;
@@ -52,6 +53,7 @@ public class Auction extends BaseTimeEntity {
 	private LocalDateTime bidOpening;
 	@NotNull
 	private LocalDateTime bidClosing;
+	@NotNull
 	private LocalDateTime bidClosingExtended;
 	private Long winningBidPrice;
 
