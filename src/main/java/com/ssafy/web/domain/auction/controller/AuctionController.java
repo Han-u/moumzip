@@ -1,17 +1,26 @@
 package com.ssafy.web.domain.auction.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.web.domain.auction.entity.Auction;
+import com.ssafy.web.domain.auction.dto.AuctionCreateUpdate;
+import com.ssafy.web.domain.auction.dto.AuctionDetail;
+import com.ssafy.web.domain.auction.dto.AuctionList;
 import com.ssafy.web.domain.auction.service.AuctionService;
+import com.ssafy.web.domain.member.entity.Member;
+import com.ssafy.web.global.common.auth.CurrentUser;
+import com.ssafy.web.global.common.auth.RequiresAdmin;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,30 +28,46 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auctions")
 @RequiredArgsConstructor
 public class AuctionController {
-	private final AuctionService auctionService;
+    private final AuctionService auctionService; // autowired 차이점
 
-	@GetMapping
-	public List<Auction> getAuctionList(){
-		return null;
-	}
 
-	@GetMapping("/{auctionId}")
-	public Auction getAuction(@PathVariable String auctionId){
-		return null;
-	}
+    // 몇 개 가져올지?, 파라미터로 옵션을 받아서 옵션에 따라 진행중, 뭐 어쩌고
+    // spring data jpa 페이징 기능 활용, page 리턴
+    // dto 처리
+    @GetMapping
+    public ResponseEntity<Page<AuctionList>> getAuctionList(@RequestParam(required = false) String status, Pageable pageable) {
+        Page<AuctionList> auctionPage = auctionService.findAllAuctions(status, pageable);
 
-	@PostMapping
-	public void createAuction(){
+        return ResponseEntity.status(HttpStatus.OK).body(auctionPage);
+    }
 
-	}
+    @GetMapping("/{auctionId}")
+    public ResponseEntity<AuctionDetail> getAuction(@PathVariable Long auctionId) {
+        AuctionDetail auctionDetail = auctionService.findAuctionById(auctionId);
+        return ResponseEntity.status(HttpStatus.OK).body(auctionDetail);
+    }
 
-	@PatchMapping("/{auctionId}")
-	public void updateAuction(@PathVariable String auctionId){
+    @PostMapping
+    @RequiresAdmin
+    public ResponseEntity<?> createAuction(@RequestBody AuctionCreateUpdate auctionCreateUpdate, @CurrentUser Member member) {
+        // 멤버 받아서 서비스에서 어드민 확인
+        auctionService.createAuction(auctionCreateUpdate, member);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
-	}
+    @PatchMapping("/{auctionId}")
+    @RequiresAdmin
+    public ResponseEntity<?> updateAuction(@PathVariable Long auctionId, @RequestBody AuctionCreateUpdate auctionCreateUpdate, @CurrentUser Member member) {
+        // 멤버 받아서 서비스에서 어드민 확인
+        auctionService.updateAuction(auctionId, auctionCreateUpdate, member);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
-	@DeleteMapping("/{auctionId}")
-	public void deleteAuction(@PathVariable String auctionId){
-
-	}
+    @DeleteMapping("/{auctionId}")
+    @RequiresAdmin
+    public ResponseEntity<?> deleteAuction(@PathVariable Long auctionId, @CurrentUser Member member) {
+        // 멤버 받아서 서비스에서 어드민 확인
+        auctionService.deleteAuction(auctionId, member);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
